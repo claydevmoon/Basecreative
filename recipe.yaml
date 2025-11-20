@@ -19,17 +19,6 @@ variables:
     type: string
 
 tasks:
-  # 1) Baixar o ZIP
-  - action: download
-    url: https://github.com/FiveCommunity/Basecreative/archive/refs/heads/main.zip
-    dest: base.zip
-
-  # 2) Descompactar
-  - action: unzip
-    src: base.zip
-    dest: ./
-
-  # 3) Mover recursos
   - action: move
     src: Basecreative-main/resources
     dest: ./resources
@@ -42,9 +31,7 @@ tasks:
     src: Basecreative-main/server.cfg
     dest: ./server.cfg
 
-  # 4) Baixar artefatos mais recentes
   - action: ensure_latest_artifacts
 
-  # 5) Aplicar variáveis no server.cfg
   - action: replace_vars
     file: server.cfg
