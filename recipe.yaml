@@ -1,37 +1,39 @@
-name: Basecreative - Base FiveM
+name: Basecreative – Base FiveM
 description: Instalação automática da base Basecreative via GitHub.
 version: 1.0.0
 
-repository:
-  type: zip
-  url: https://github.com/FiveCommunity/Basecreative/archive/refs/heads/main.zip
-
-server:
-  cfgPath: server.cfg
-
-variables:
-  - name: sv_licenseKey
-    prompt: "Insira sua chave CFX (sv_licenseKey)"
-    type: string
-
-  - name: mysql_connection_string
-    prompt: "Digite a string de conexão MySQL (ex: mysql://root@localhost/basecreative?charset=utf8mb4)"
-    type: string
-
 tasks:
-  - action: move
-    src: Basecreative-main/resources
+  - action: download_github
+    src: FiveCommunity/Basecreative
+    ref: main
+    dest: ./basecreative
+    extract: true
+
+  - action: move_path
+    src: basecreative/resources
     dest: ./resources
 
-  - action: move
-    src: Basecreative-main/config
-    dest: ./config
-
-  - action: move
-    src: Basecreative-main/server.cfg
+  - action: move_path
+    src: basecreative/server.cfg
     dest: ./server.cfg
+
+  - action: remove_path
+    src: basecreative
 
   - action: ensure_latest_artifacts
 
-  - action: replace_vars
+  - action: write_file
     file: server.cfg
+    append: true
+    content: |
+      sv_licenseKey "{{sv_licenseKey}}"
+      set mysql_connection_string "{{mysql_connection_string}}"
+
+variables:
+  sv_licenseKey:
+    type: string
+    prompt: Insira sua key do FiveM
+
+  mysql_connection_string:
+    type: string
+    prompt: String de conexão MySQL (ex: mysql://root@localhost/basecreative?charset=utf8mb4)
